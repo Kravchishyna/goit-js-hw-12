@@ -1,0 +1,14 @@
+import{a as g,S as b,i as d}from"./assets/vendor-xklh1a1B.js";(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const t of document.querySelectorAll('link[rel="modulepreload"]'))o(t);new MutationObserver(t=>{for(const s of t)if(s.type==="childList")for(const c of s.addedNodes)c.tagName==="LINK"&&c.rel==="modulepreload"&&o(c)}).observe(document,{childList:!0,subtree:!0});function n(t){const s={};return t.integrity&&(s.integrity=t.integrity),t.referrerPolicy&&(s.referrerPolicy=t.referrerPolicy),t.crossOrigin==="use-credentials"?s.credentials="include":t.crossOrigin==="anonymous"?s.credentials="omit":s.credentials="same-origin",s}function o(t){if(t.ep)return;t.ep=!0;const s=n(t);fetch(t.href,s)}})();const L="45554119-358c100a4851c47a3e0063778",w="https://pixabay.com/api/";async function f(e,r=1,n=15){try{return(await g.get(w,{params:{key:L,q:e,image_type:"photo",orientation:"horizontal",safesearch:!0,page:r,per_page:n}})).data}catch(o){throw console.error("Error fetching images:",o),o}}let l;function y(e){const r=document.querySelector(".gallery"),n=e.map(o=>`
+      <a href="${o.largeImageURL}" class="gallery-item">
+      <div class="photo-card">
+       <img src="${o.webformatURL}" alt="${o.tags}" loading="lazy" />
+        <div class="info">
+          <p><b>Likes:</b> ${o.likes}</p>
+          <p><b>Views:</b> ${o.views}</p>
+          <p><b>Comments:</b> ${o.comments}</p>
+          <p><b>Downloads:</b> ${o.downloads}</p>
+        </div>
+      </div>
+      </a>
+    `).join("");r.insertAdjacentHTML("beforeend",n),l?l.refresh():l=new b(".gallery a")}function S(){const e=document.querySelector(".gallery");e.innerHTML=""}function u(e){const r=document.querySelector(".load-more");r.style.display=e?"block":"none"}function h(){document.querySelector(".loader").style.display="block"}function m(){document.querySelector(".loader").style.display="none"}function v(){d.info({title:"No results",message:"Sorry, there are no images matching your search query. Please try again!",position:"topRight"})}function q(){d.info({title:"End of results",message:"We're sorry, but you've reached the end of search results.",position:"topRight"})}function p(){const{height:e}=document.querySelector(".gallery").firstElementChild.getBoundingClientRect();window.scrollBy({top:e*2,behavior:"smooth"})}let a=1,i="";document.querySelector(".search-form").addEventListener("submit",async e=>{if(e.preventDefault(),i=e.currentTarget.elements.searchQuery.value.trim(),i!==""){a=1,S(),u(!1),h();try{const r=await f(i,a);m(),r.hits.length>0?(y(r.hits),u(!0),p()):v()}catch(r){console.error("Error during search:",r)}}});document.querySelector(".load-more").addEventListener("click",async()=>{a+=1,h();try{const e=await f(i,a);m(),y(e.hits),p(),a*15>=e.totalHits&&(u(!1),q())}catch(e){console.error("Error loading more images:",e)}});
+//# sourceMappingURL=commonHelpers.js.map
