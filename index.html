@@ -5,28 +5,39 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vanilla App Template</title>
-    
+    <style>
+      .is-hidden { display: none; }
+      .loader { display: none; }
+    </style>
     <script type="module" crossorigin src="/goit-js-hw-12/commonHelpers.js"></script>
     <link rel="modulepreload" crossorigin href="/goit-js-hw-12/assets/vendor-xklh1a1B.js">
     <link rel="stylesheet" crossorigin href="/goit-js-hw-12/assets/vendor-CWKLx11g.css">
-    <link rel="stylesheet" crossorigin href="/goit-js-hw-12/assets/index-CV8doJOH.css">
+    <link rel="stylesheet" crossorigin href="/goit-js-hw-12/assets/index-D_T3-dys.css">
   </head>
   <body>
     <div class="container">
-      <form class="search-form">
-        <input class="search-input" type="text" name="searchQuery" autocomplete="off" placeholder="Search images..." />
+      <form id="search-form">
+        <input class="search-input" type="text" name="query" autocomplete="off" placeholder="Search images..." />
         <button type="submit">Search</button>
       </form>
       
       <div class="gallery"></div>
-      <div class="loader" style="display: none;">Loading...</div>
-      <button class="load-more" style="display: none;">Load more</button>
+     
+      <div class="loader is-hidden">Loading...</div>
+      <button class="load-more is-hidden">Load more</button>
     </div>
    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
   </body>
 </html>
 
 
+ 
+  
+  
+ 
+
+ 
 
 
 
