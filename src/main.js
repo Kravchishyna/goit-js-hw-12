@@ -1,60 +1,45 @@
 import { fetchImages } from './js/pixabay-api';
-import {
-  renderImages,
-  clearGallery,
-  toggleLoadMoreButton,
-  showLoadingIndicator,
-  hideLoadingIndicator,
-  showNoResultsMessage,
-  showEndOfResultsMessage,
-  smoothScroll,
-} from './js/render-functions';
+import { renderGallery, toggleLoadMoreBtn, showLoader, hideLoader, showError, scrollToNewImages } from './js/render-functions';
 
 let currentPage = 1;
 let currentQuery = '';
+const refs = {
+  form: document.querySelector('#search-form'),
+  gallery: document.querySelector('.gallery'),
+  loadMoreBtn: document.querySelector('.load-more'),
+  loader: document.querySelector('.loader'),
+};
 
-document.querySelector('.search-form').addEventListener('submit', async (event) => {
+refs.form.addEventListener('submit', onSearch);
+refs.loadMoreBtn.addEventListener('click', onLoadMore);
+
+async function onSearch(event) {
   event.preventDefault();
+  currentQuery = event.currentTarget.elements.query.value.trim();
+  if (!currentQuery) return;
 
-  currentQuery = event.currentTarget.elements.searchQuery.value.trim();
-  if (currentQuery === '') return;
+  currentPage = 1; // Reset page for new search
+  refs.gallery.innerHTML = ''; // Clear previous results
+  refs.loadMoreBtn.classList.add('is-hidden'); // Hide Load More button
 
-  currentPage = 1;
-  clearGallery();
-  toggleLoadMoreButton(false);
-  showLoadingIndicator();
+  await fetchAndDisplayImages();
+}
 
+async function onLoadMore() {
+  currentPage++;
+  await fetchAndDisplayImages();
+}
+
+async function fetchAndDisplayImages() {
   try {
+    showLoader(refs.loader);
     const data = await fetchImages(currentQuery, currentPage);
-    hideLoadingIndicator();
-
-    if (data.hits.length > 0) {
-      renderImages(data.hits);
-      toggleLoadMoreButton(true);
-      smoothScroll();
-    } else {
-      showNoResultsMessage();
-    }
+    renderGallery(data.hits, refs.gallery);
+    scrollToNewImages(refs.gallery);
+    toggleLoadMoreBtn(refs.loadMoreBtn, data.totalHits, currentPage);
   } catch (error) {
-    console.error('Error during search:', error);
+    showError(error.message);
+  } finally {
+    hideLoader(refs.loader);
   }
-});
-
-document.querySelector('.load-more').addEventListener('click', async () => {
-  currentPage += 1;
-  showLoadingIndicator();
-
-  try {
-    const data = await fetchImages(currentQuery, currentPage);
-    hideLoadingIndicator();
-    renderImages(data.hits);
-    smoothScroll();
-
-    if (currentPage * 15 >= data.totalHits) {
-      toggleLoadMoreButton(false);
-      showEndOfResultsMessage();
-    }
-  } catch (error) {
-    console.error('Error loading more images:', error);
-  }
-});
+}
